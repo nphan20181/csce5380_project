@@ -23,13 +23,13 @@
 ### Python Programs
 
  - [Data Sampling](stratified_sampling.py)
-   - Command: python stratified_sampling.py
+   - Command: ___python stratified_sampling.py___
    - Call this program to perform stratified sampling on the pre-processed data.
  - [DT.py](DT.py) - this module contains:
    - Two classes: Node and DecisionTree.
    - Utility functions for making predictions and evaluating the model.
  - [Main](main.py)
-   - Command: python main.py
+   - Command: ___python main.py___
    - Call this program to build a Decision Tree or display result of a previously built tree.
    - ![Screen Shot of Main](https://github.com/nphan20181/csce5380_project/blob/main/images/main.PNG)
  
