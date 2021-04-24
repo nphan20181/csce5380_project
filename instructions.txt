@@ -1,0 +1,45 @@
+Belows are the Python programs and Jupyter notebooks used in the project.
+
+Before running the programs, call the Python command below to install the required libraries:
+pip3 install -r py_libraries.txt
+
+- Instructions:
+  + Run the Jupyter notebook data_preprocessing.ipynb
+  + Open the terminal and run the data sampling program using the command:
+    python stratified_sampling.py
+  + Call the main program and follow the instruction on the screen.
+    python main.py
+
+
+- Main program 
+  Command: python main.py
+  This program displays a menu with 3 options: 
+  1) Build a new Decision Tree.
+  2) View result of pre-built tree.
+  3) Exit the program.
+
+- Data sampling program
+  Command: python stratified_sampling.py
+  This program performs stratified data sampling on the pre-processed data.
+
+- Python modules:
+  1) DT.py
+     This program contains:
+     - 2 classes: Node and DecisionTree.
+     - Utilities functions for making predictions and evaluating the model.
+  2) global_variables.py
+     This file contain 2 global variables: 
+     - name of the target attribute
+     - a list of features.
+
+- Jupyter notebooks:
+  1) data_preprocessing.ipynb
+     This notebook performs data preprocessing tasks on raw data.
+  2) exploratory_data_analysis.ipynb
+     This notebook visualizes pre-processed data for exploratory data analysis.
+
+- Text file: py_libraries.txt
+  This text file contains all Python libraries used in the project.
+
+- Text file: weka_dt_output_result.txt
+  This text file contains output result from Weka
