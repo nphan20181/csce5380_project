@@ -27,7 +27,7 @@
  - [Main](main.py)
    - Command: python main.py
    - Call this program to build a Decision Tree or display result of a previously built tree.
-   - ![Screen Shot of Main](images/main.png)
+   - ![Screen Shot of Main](https://github.com/nphan20181/csce5380_project/blob/main/images/main.PNG)
 
 ### Text File
 
