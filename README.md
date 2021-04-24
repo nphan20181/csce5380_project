@@ -1,6 +1,6 @@
 # Identifying Profitable LendingClub Loans using Decision Tree
 
-Develope a Decision Tree classifier to identify profitable Lending loans.
+Develop a Decision Tree classifier to identify profitable Lending loans.
 
 ## Contents
 
