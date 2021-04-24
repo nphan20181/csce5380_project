@@ -27,7 +27,7 @@
    - Call this program to perform stratified sampling on the pre-processed data.
  - [DT.py](DT.py) - this module contains:
    - Two classes: Node and DecisionTree.
-   - Utilities functions for making predictions and evaluating the model.
+   - Utility functions for making predictions and evaluating the model.
  - [Main](main.py)
    - Command: python main.py
    - Call this program to build a Decision Tree or display result of a previously built tree.
