@@ -2,7 +2,7 @@
 
 Develop a Decision Tree classifier to identify profitable Lending loans.
 
-## Instructions:
+## Instructions
 
  - Download LendingClub loan data on [Kaggle](https://www.kaggle.com/wordsforthewise/lending-club)
  - Call the Python command below to install the required libraries: ___pip3 install -r py_libraries.txt___
