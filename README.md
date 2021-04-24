@@ -24,7 +24,7 @@
  - [Data Sampling](stratified_sampling.py)
    - Command: python stratified_sampling.py
    - Call this program to perform stratified sampling on the pre-processed data.
- - [DT.py](DT.py) - this program contains:
+ - [DT.py](DT.py) - this module contains:
    - Two classes: Node and DecisionTree.
    - Utilities functions for making predictions and evaluating the model.
  - [Main](main.py)
