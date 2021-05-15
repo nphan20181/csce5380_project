@@ -14,6 +14,7 @@ class Node:
         self.name = ''           # name of the node
         self.label = ''          # class label if this is the leaf node
         self.test_cond = ''      # test condition
+        self.parent = None
         self.child = []          # child nodes
         self.edge_label = []     # edge label for each child
         self.partition = None    # partition of the test condition
@@ -63,15 +64,15 @@ class Node:
 
 
 class DecisionTree:
-    def __init__(self, data, targetAttr, attrsList, savePartition=False, 
+    def __init__(self, data, targetAttr, attrsList,
                  max_depth=7, min_samples_leaf=5, max_leaf_nodes=100):
         # initialize instance's variables
         self.size_of_tree = 0
         self.num_of_leaves = 0
+        self.leaves = []
         self.tree_level = -1
         self.TARGET = targetAttr
         self.ATTRIBUTES = attrsList
-        self.savePartition = savePartition
         
         # hyper-parameters
         self.min_samples_leaf = min_samples_leaf  # minimum number of samples required to be at a leaf node
@@ -194,21 +195,27 @@ class DecisionTree:
         # set stopping condition to False
         stop_cond = False
         
-        # check if all record have same class label
-        # or the number of records has fallen below min_samples_leaf
-        if len(E1[self.TARGET].unique()) == 1 or \
-           self.min_samples_leaf > E1.shape[0] or \
-           depth >= self.max_depth or \
-           (self.max_leaf_nodes is not None and self.num_of_leaves >= self.max_leaf_nodes):
+        # stopping conditions
+        no_samples = len(E1) == 0                                       # no samples left
+        no_attributes = len(F1) == 0                                    # no attributes left
+        same_label = len(E1[self.TARGET].unique()) == 1                 # all records have same class label
+        below_min_samples_leaf = self.min_samples_leaf > E1.shape[0]    # the number of records has fallen below min_samples_leaf
+        above_max_depth = depth >= self.max_depth                       # reach the number of max depth allowed
+        
+        # reach or exceed the max leaf nodes
+        above_max_leaf_node = (self.max_leaf_nodes is not None and self.num_of_leaves >= self.max_leaf_nodes)
+        
+        if no_samples or no_attributes or same_label or \
+           below_min_samples_leaf or above_max_depth or above_max_leaf_node:
             stop_cond = True
         else:
-            # check if all records have same attribute value
-            if (len(F1) == 1 and len(E1[F1[0]].unique()) == 1) or len(F1) == 0:
-                counts = list(E1[self.TARGET].value_counts().to_dict().values())
-                for i, cnt in enumerate(counts):
-                    if i < len(counts)-1 and cnt != counts[i+1]:
-                        stop_cond = True
-                        break
+            # check if all records have same attribute value except for the target
+            same_attr_val = True
+            for attr in F1:
+                if attr != self.TARGET and len(E1[attr].unique()) > 1:
+                    same_attr_val = False
+                    break
+            stop_cond = same_attr_val
 
         return stop_cond
 
@@ -222,7 +229,7 @@ class DecisionTree:
         Return a tuple of predicted label and corresponding probability
         '''
 
-        # get value counts for each attribute's category
+        # get value counts for each class label
         temp = E1[self.TARGET].value_counts().to_dict()
         total = sum(temp.values())
 
@@ -232,7 +239,7 @@ class DecisionTree:
         for label in temp.keys():
             prob = round(temp[label] / total, 5)
 
-            if len(pred_label) == 0 or max_prob < prob:
+            if max_prob == 0 or max_prob < prob:
                 max_prob = prob
                 pred_label = label
         
@@ -241,6 +248,16 @@ class DecisionTree:
 
         return (pred_label, max_prob)
 
+    def createLeafNode(self, samples):
+        # create leaf node
+        leaf = Node()
+        leaf.label, leaf.prob = self.Classify(samples)      # get class label and prob
+        leaf.leaf_node = True                               # set node as a leaf node
+        self.num_of_leaves += 1                             # increment number of leaves
+        self.size_of_tree += 1                              # increment size of the tree
+        self.leaves.append(leaf)                            # add leaf node to a list
+        return leaf
+        
     def TreeGrowth(self, E, F, depth=0):
         '''
         Recursive function for building a decision tree.
@@ -252,16 +269,9 @@ class DecisionTree:
         Return a node of the tree.
         '''
         
-        # assign class label if stopping condition is True
         if self.stopping_cond(E, F, depth) == True:
-            # create leaf node
-            leaf = Node()
-            leaf.label, leaf.prob = self.Classify(E)      # get class label and prob
-            leaf.leaf_node = True                         # set node as a leaf node
-            self.num_of_leaves += 1                       # increment number of leaves
-            self.size_of_tree += 1                        # increment size of the tree
-
-            return leaf
+            # create a leaf node and assign class label
+            return self.createLeafNode(E)
         else:
             # increment tree_level
             self.tree_level += 1
@@ -279,17 +289,23 @@ class DecisionTree:
             for v in tqdm(V):
                 E_v = E[E[root.test_cond] == v]           # select partition for every test_cond value
                 
-                # child
+                # get a list of available attributes for the given samples
                 attributes = list(E_v.columns)
                 attributes.remove(gv.TARGET)
-                child = self.TreeGrowth(E_v, attributes, depth+1)
+                
+                # create child node
+                if len(E_v) == 0 or len(attributes) == 0:
+                    # convert node to a leaf node if there are no samples or no attributes left
+                    child = self.createLeafNode(E)
+                    child.partition = E
+                else:
+                    child = self.TreeGrowth(E_v, attributes, depth+1)
+                    child.partition = E_v
+                    
+                child.parent = root
                 child.tree_level = root.tree_level + 1
                 child.name = root.test_cond
                 child.test_value = v
-                
-                # save partition
-                if self.savePartition:
-                    child.partition = E_v
                 
                 # root
                 root.child.append(child)         # add child as descendent

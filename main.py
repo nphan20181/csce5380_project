@@ -20,7 +20,7 @@ def buildTree():
     train = pd.read_csv('data/train.csv')
 
     # train Decision Tree classifier
-    clf = DecisionTree(train, gv.TARGET, gv.ATTRIBUTES, True)
+    clf = DecisionTree(train, gv.TARGET, gv.ATTRIBUTES)
 
     # draw Decision Tree
     print('')
