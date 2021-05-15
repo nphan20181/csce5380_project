@@ -294,8 +294,8 @@ class DecisionTree:
                 attributes.remove(gv.TARGET)
                 
                 # create child node
-                if len(E_v) == 0 or len(attributes) == 0:
-                    # convert node to a leaf node if there are no samples or no attributes left
+                if len(E_v) == 0:
+                    # convert node to a leaf node if there are no samples left
                     child = self.createLeafNode(E)
                     child.partition = E
                 else:
